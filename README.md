@@ -25,7 +25,7 @@
 
 运行OpenCV
 
-[https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html](https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html)
+[https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/opencv_dev/lesson2.html](https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/opencv_dev/lesson2.html)
 
 ## 小程序版
 
