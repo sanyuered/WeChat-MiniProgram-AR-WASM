@@ -8,12 +8,18 @@
       "pages": [
         "index"
       ]
+    },
+    {
+      "root": "package_lesson2",
+      "pages": [
+        "index"
+      ]
     }
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "微信小程序运行Go",
+    "navigationBarTitleText": "运行WASM",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json"

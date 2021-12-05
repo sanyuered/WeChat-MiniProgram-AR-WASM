@@ -1,0 +1,71 @@
+.page{
+    background-color: #F8F8F8;
+    font-size: 16px;
+}
+.page__hd {
+    padding: 40px;
+}
+.page__bd {
+    padding-bottom: 40px;
+}
+.page__bd_spacing {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.page__ft{
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.page__title {
+    text-align: left;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.page__desc {
+    margin-top: 5px;
+    color: #888888;
+    text-align: left;
+    font-size: 14px;
+}
+
+.marginTop10{
+    margin-top: 10px;
+}
+
+.loading{
+    text-align: center;
+}
+
+.button-sp-area{
+    margin: 0 auto;
+    padding-top: 15px;
+    width: 60%;
+}
+.mini-btn{
+    margin-right: 5px;
+}
+.weui-panel__hd{
+ font-weight:bold;
+ color:#333;
+}
+
+.visibleCanvas{
+    margin:10px auto;
+    display: block;
+}
+
+.hiddenCanvas{
+    position:fixed;
+    left:1000px;
+    width:800%;
+    height:400%;
+}
+
+.inputImage{
+    width:375px;
+    display: block;
+    margin: auto;
+}

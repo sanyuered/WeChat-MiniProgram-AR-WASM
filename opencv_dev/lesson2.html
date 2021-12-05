@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>OpenCV WebAssembly</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/weui.css">
+	<link rel="stylesheet" href="assets/app.css">
+</head>
+
+<body>
+	<div id="app" class="page">
+		<div class="page__bd">
+			<div class="weui-panel">
+				<div class="weui-panel__hd">图像处理</div>
+				<div class="weui-panel__bd">
+					<img id="image1" v-bind:src="sampleImage1Url" class="inputImage" />
+					<canvas id="canvas1" class="visibleCanvas"></canvas>
+					<div class="weui-media-box">
+						<a href="javascript:" class="weui-btn weui-btn_primary marginTop10"
+						 	v-on:click="btnRun1">灰度化</a>
+						<a href="javascript:" class="weui-btn weui-btn_primary marginTop10"
+							v-on:click="btnRun2">边缘检测</a>
+						<a href="javascript:" class="weui-btn weui-btn_primary marginTop10"
+							v-on:click="btnRun3">特征点检测</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="assets/vue.min.js"></script>
+	<script>
+		// wasm路径（相对于assets/opencv_exec.js的文件位置）
+		window.wasm_url = "../opencv3.4.16.wasm";
+	</script>
+	<!-- opencv_exec.js会从window.wasm_url获取wasm路径 -->
+	<script src="assets/opencv_exec.js"></script>
+	<script>
+		// 可见画布
+		const canvas1 = 'canvas1'
+		// 示例图片
+		const sampleImage1 = './assets/sampleImage1.jpg'
+		// 画布最大宽度
+		const maxCanvasWidth = 375
+		// 图像元素
+		const image1 = 'image1'
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				canvas1Width: 375,
+				canvas1Height: 150,
+				sampleImage1Url: sampleImage1,
+			},
+			mounted: function () {
+			},
+			methods: {
+				imgProcess1(imageData, canvasDom) {
+					let src = cv.imread(imageData);
+
+					let dst = new cv.Mat();
+					// 灰度化
+					cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+
+					cv.imshow(canvasDom, dst);
+					src.delete();
+					dst.delete()
+				},
+				imgProcess2(imageData, canvasDom) {
+					let src = cv.imread(imageData);
+
+					let dst = new cv.Mat();
+					// 灰度化
+					cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+					// 边缘检测
+					cv.Canny(src, dst, 50, 100, 3, false);
+
+					cv.imshow(canvasDom, dst);
+					src.delete();
+					dst.delete()
+				},
+				imgProcess3(imageData, canvasDom) {
+					let src = cv.imread(imageData);
+					let dst = new cv.Mat();
+					// 灰度化
+					cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+
+					var orb = new cv.ORB();
+					var keypoints= new cv.KeyPointVector();
+					var descriptors= new cv.Mat();
+					// 特征点
+					orb.detect(src,keypoints)
+					// 特征点的描述因子
+					orb.compute(src,keypoints,descriptors)
+					// 绘制特征点
+					cv.drawKeypoints(src, keypoints, dst)
+				
+					cv.imshow(canvasDom, dst);
+					src.delete();
+					dst.delete()
+				},
+				btnRun1() {
+					var _that = this;	
+					_that.imgProcess1(image1, canvas1)
+				},
+				btnRun2() {
+					var _that = this;
+					this.imgProcess2(image1, canvas1)
+				},
+				btnRun3() {
+					var _that = this;
+					this.imgProcess3(image1, canvas1)
+				},
+			},
+		});
+
+	</script>
+</body>
+
+</html>
