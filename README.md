@@ -2,19 +2,28 @@
 
 | 日期　　　| 内容 |
 | -- | -- |
-| 2021-12-03 | 新增：微信小程序运行Go语言WebAssembly的示例。也包含网页运行Go语言的示例。 |
+| 2021-12-05 | 新增：微信小程序运行OpenCV的示例。也包含网页运行OpenCV的示例。 |
+| 2021-12-03 | 新增：微信小程序运行Go语言的示例。也包含网页运行Go语言的示例。 |
 
 ## 介绍
 
-将Go语言编译为WebAssembly，使用微信小程序的WXWebAssembly功能运行WebAssembly。
+1、将Go语言编译为WebAssembly，使用微信小程序的WXWebAssembly功能运行WebAssembly。
 
 因为Go语言能快速开发WebAssembly，所以使用Go语言能为小程序快速开发WebAssembly。
+
+2、在微信小程序中使用WebAssembly版的OpenCV，让我们开发图像视觉。
 
 [WXWebAssembly官方文档](https://developers.weixin.qq.com/miniprogram/dev/framework/performance/wasm.html)
 
 ## 网页版
 
 在线预览，和小程序版使用的是相同的wasm文件。
+
+运行Go
+
+[https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html](https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html)
+
+运行OpenCV
 
 [https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html](https://sanyuered.github.io/WeChat-MiniProgram-AR-WASM/go_dev/lesson1.html)
 
@@ -49,6 +58,20 @@ Go运行时，会调用小程序的console.log()输出信息。
 点击按钮后，输出内容会返回输入的自定义文本。Go语言一侧使用了time.Sleep()和协程，模拟了等待2秒的异步方法调用。
 
 ![avatar](screenshot/3-2.jpg)
+
+## 小程序调用OpenCV的函数。
+
+灰度化
+
+![avatar](screenshot/4-1.jpg)
+
+边缘检测
+
+![avatar](screenshot/4-2.jpg)
+
+特征点检测
+
+![avatar](screenshot/4-3.jpg)
 
 ## 目录结构
 

@@ -1,6 +1,6 @@
 <view class="page">
     <view class="page__bd">
-        <!-- Video Mask -->
+       
         <view class="weui-panel">
             <view class="weui-panel__hd">Go和小程序互操作</view>
             <view class="weui-panel__bd">
@@ -11,6 +11,22 @@
                     <view class="weui-media-box__info">
                         <navigator url="/package_lesson1/index" class="marginTop10">
                             <button class="weui-btn" type="primary">Lesson 1</button>
+                        </navigator>
+                    </view>
+                </view>
+            </view>
+        </view>
+      
+         <view class="weui-panel">
+            <view class="weui-panel__hd">小程序使用OpenCV</view>
+            <view class="weui-panel__bd">
+                <view class="weui-media-box weui-media-box_text">
+                    <view class="weui-media-box__desc">
+                        使用WXWebAssembly.instantiate初始化OpenCV运行环境。
+                    </view>
+                    <view class="weui-media-box__info">
+                        <navigator url="/package_lesson2/index" class="marginTop10">
+                            <button class="weui-btn" type="primary">Lesson 2</button>
                         </navigator>
                     </view>
                 </view>

@@ -1,0 +1,19 @@
+<view class="page">
+    <view class="page__bd">
+        <view class="weui-panel">
+            <view class="weui-panel__hd">图像处理</view>
+            <view class="weui-panel__bd">
+                    <image src="{{sampleImage1Url}}" mode="aspectFit" class="inputImage"></image>
+                    <!-- canvas v2-->
+                    <canvas id="canvas1" type="2d" class="visibleCanvas" 
+                    style="width:{{canvas1Width}}px;height:{{canvas1Height}}px;"></canvas>
+
+                <view class="weui-media-box">
+                    <button bindtap="btnRun1" class="marginTop10" type="primary">灰度化</button>
+                    <button bindtap="btnRun2" class="marginTop10" type="primary">边缘检测</button>
+                    <button bindtap="btnRun3" class="marginTop10" type="primary">特征点检测</button>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

@@ -13,6 +13,10 @@
             {
                 "type": "folder",
                 "value": "go_dev"
+            },
+            {
+                "type": "folder",
+                "value": "opencv_dev"
             }
         ]
     },
@@ -55,7 +59,7 @@
         "useCompilerPlugins": false
     },
     "compileType": "miniprogram",
-    "libVersion": "2.15.0",
+    "libVersion": "2.16.1",
     "appid": "wxb4cdacc73d2d71c7",
     "projectname": "WeChat-WebAR",
     "debugOptions": {
