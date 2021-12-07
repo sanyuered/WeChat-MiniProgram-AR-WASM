@@ -6369,9 +6369,21 @@
                     for (var i = 0; i < argCount - 2; ++i) {
                         args2.push(argTypes[i + 2])
                     }
-                    for (var i = 2; i < argCount; ++i) {
-                        if (argTypes[i].destructorFunction !== null) {
-                            args2.push(argTypes[i].destructorFunction)
+                    if (isClassMethodFunc) {
+                        for (var i = 1; i < argCount; ++i) {
+                            if (argTypes[i].destructorFunction !== null) {
+                                args2.push(argTypes[i].destructorFunction)
+                            }else{
+                                args2.push(null)
+                            }
+                        }
+                    } else {
+                        for (var i = 2; i < argCount; ++i) {
+                            if (argTypes[i].destructorFunction !== null) {
+                                args2.push(argTypes[i].destructorFunction)
+                            }else{
+                                args2.push(null)
+                            }
                         }
                     }
 
@@ -6379,7 +6391,7 @@
                         // argType0,argType1,argType2
                         const argsTypeOrigin = Array.prototype.slice.call(arguments, 6, 6 + argCount - 2)
                         // arg0Wired_dtor
-                        const argsWired_dtorOrigin = Array.prototype.slice.call(arguments, 6 + argCount - 2)
+                        const argsWired_dtorOrigin = Array.prototype.slice.call(arguments, 6 + argCount - 2)         
 
                         return function () {
                             // arg0, arg1, arg2
@@ -9646,7 +9658,6 @@
         });
     else if (typeof exports === 'object')
         exports["cv"] = cv;
-
     if (typeof Module === 'undefined')
         Module = {};
     return cv(Module);
