@@ -6370,9 +6370,21 @@
                     for (var i = 0; i < argCount - 2; ++i) {
                         args2.push(argTypes[i + 2])
                     }
-                    for (var i = 2; i < argCount; ++i) {
-                        if (argTypes[i].destructorFunction !== null) {
-                            args2.push(argTypes[i].destructorFunction)
+                    if (isClassMethodFunc) {
+                        for (var i = 1; i < argCount; ++i) {
+                            if (argTypes[i].destructorFunction !== null) {
+                                args2.push(argTypes[i].destructorFunction)
+                            }else{
+                                args2.push(null)
+                            }
+                        }
+                    } else {
+                        for (var i = 2; i < argCount; ++i) {
+                            if (argTypes[i].destructorFunction !== null) {
+                                args2.push(argTypes[i].destructorFunction)
+                            }else{
+                                args2.push(null)
+                            }
                         }
                     }
 
