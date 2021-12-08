@@ -6342,6 +6342,7 @@
                 if (!(constructor instanceof Function)) {
                     throw new TypeError("new_ called with constructor type " + typeof constructor + " which is not a function")
                 }
+             
                 var dummy = createNamedFunction(constructor.name || "unknownFunctionName", function () { });
                 dummy.prototype = constructor.prototype;
                 var obj = new dummy;
@@ -6387,22 +6388,28 @@
                             }
                         }
                     }
+                    
 
                     function f1(throwBindingError, invoker, fn, runDestructors, retType, classParam) {
+                        // arguments = [argType0,argType1,argType2,arg0Wired_dtor]
                         // argType0,argType1,argType2
                         const argsTypeOrigin = Array.prototype.slice.call(arguments, 6, 6 + argCount - 2)
                         // arg0Wired_dtor
                         const argsWired_dtorOrigin = Array.prototype.slice.call(arguments, 6 + argCount - 2)
 
                         return function () {
-                            // arg0, arg1, arg2
+                            // arguments = [arg0, arg1, arg2]
                             if (arguments.length !== argCount - 2) {
                                 throwBindingError('function ' + humanName + ' called with ' + arguments.length + ' arguments, expected 0 args!');
                             }
                             var thisWired;
+                            var destructors;
+                            if (needsDestructorStack) {
+                                destructors = [];
+                            }
+
                             if (isClassMethodFunc) {
                                 if (needsDestructorStack) {
-                                    var destructors = [];
                                     thisWired = classParam.toWireType(destructors, this);
                                 } else {
                                     thisWired = classParam.toWireType(null, this);
@@ -6411,8 +6418,13 @@
 
                             // arg0Wired,arg1Wired,arg2Wired
                             var argsWired = [];
-                            for (var i = 0; i < arguments.length; i++) {
-                                argsWired.push(argsTypeOrigin[i].toWireType(null, arguments[i]))
+                            for (var i = 0; i < argCount - 2; ++i) {
+                                if (needsDestructorStack) {
+                                    argsWired.push(argsTypeOrigin[i].toWireType(destructors, arguments[i]))
+                                }
+                                else {
+                                    argsWired.push(argsTypeOrigin[i].toWireType(null, arguments[i]))
+                                }
                             }
 
                             var rv;
@@ -6428,7 +6440,11 @@
                                 if (isClassMethodFunc) {
                                     for (var i = 1; i < argTypes.length; ++i) {
                                         if (argTypes[i].destructorFunction !== null) {
-                                            argsWired_dtorOrigin[i - 1](thisWired);
+                                            if (i == 1) {
+                                                argsWired_dtorOrigin[i - 1](thisWired);
+                                            } else {
+                                                argsWired_dtorOrigin[i - 1](argsWired[i - 1]);
+                                            }
                                         }
                                     }
                                 } else {
@@ -6445,8 +6461,11 @@
                             }
                         }
                     }
+                    
                     return f1.apply(null, args2)
                 } else {
+                   
+
                     var argsList = "";
                     var argsListWired = "";
                     for (var i = 0; i < argCount - 2; ++i) {
@@ -6491,6 +6510,7 @@
                     invokerFnBody += "}\n";
                     args1.push(invokerFnBody);
                     var invokerFunction = new_(Function, args1).apply(null, args2);
+
                     return invokerFunction
                 }
 
@@ -7155,6 +7175,7 @@
                 return a
             }
             function __emval_get_method_caller(argCount, argTypes) {
+    
                 var types = __emval_lookupTypes(argCount, argTypes);
                 var retType = types[0];
                 var signatureName = retType.name + "_$" + types.slice(1).map(function (t) {
