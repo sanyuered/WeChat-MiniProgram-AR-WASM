@@ -2,6 +2,7 @@
 
 | 日期　　　| 内容 |
 | -- | -- |
+| 2022-08-29 | 修复：如果微信开发者工具设置“将JS编译成ES5”，则opencv_exec.js文件提示“Module未定义”的问题。 |
 | 2021-12-05 | 新增：微信小程序运行OpenCV的示例。也包含网页运行OpenCV的示例。 |
 | 2021-12-03 | 新增：微信小程序运行Go语言的示例。也包含网页运行Go语言的示例。 |
 
@@ -330,3 +331,6 @@ A：如果运行wx := js.Global().Get("wx");wx.Call("showModal", "");，则可�
 
 在小程序端WebAssembly，Go无法正常传递Object给小程序。将方法的输入参数从Object类型暂时换成其他变量类型。
 
+### Q4：作者的wasm_exec.js与读者的Go版本不匹配
+
+A：作者的wasm_exec.js来自 “/Go安装目录/misc/wasm/wasm_exec.js”，版本号是1.16.3。如果与作者的Go版本号不同，则可以根据“\package_lesson1\assets\wasm_exec.js”文件中的变量“IsWechat”，修改不同版本号的wasm_exec.js文件中6处代码即可。
