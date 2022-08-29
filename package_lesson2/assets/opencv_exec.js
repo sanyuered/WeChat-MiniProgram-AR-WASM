@@ -837,7 +837,7 @@
                 }
                 function instantiateArrayBuffer(receiver) {
                     return getBinaryPromise().then(function (binary) {
-                        return WebAssembly.instantiate(binary, info)
+                        return WXWebAssembly.instantiate(binary, info)
                     }).then(receiver, function (reason) {
                         err("failed to asynchronously prepare wasm: " + reason);
                         abort(reason)
@@ -853,11 +853,11 @@
                         })
 
                     } else {
-                        if (!wasmBinary && typeof WebAssembly.instantiateStreaming === "function" && !isDataURI(wasmBinaryFile) && typeof fetch === "function") {
+                        if (!wasmBinary && typeof WXWebAssembly.instantiateStreaming === "function" && !isDataURI(wasmBinaryFile) && typeof fetch === "function") {
                             fetch(wasmBinaryFile, {
                                 credentials: "same-origin"
                             }).then(function (response) {
-                                var result = WebAssembly.instantiateStreaming(response, info);
+                                var result = WXWebAssembly.instantiateStreaming(response, info);
 
                                 return result.then(receiveInstantiatedSource, function (reason) {
                                     err("wasm streaming compile failed: " + reason);
@@ -6373,7 +6373,7 @@
                         for (var i = 1; i < argCount; ++i) {
                             if (argTypes[i].destructorFunction !== null) {
                                 args2.push(argTypes[i].destructorFunction)
-                            }else{
+                            } else {
                                 args2.push(null)
                             }
                         }
@@ -6381,27 +6381,32 @@
                         for (var i = 2; i < argCount; ++i) {
                             if (argTypes[i].destructorFunction !== null) {
                                 args2.push(argTypes[i].destructorFunction)
-                            }else{
+                            } else {
                                 args2.push(null)
                             }
                         }
                     }
 
                     function f1(throwBindingError, invoker, fn, runDestructors, retType, classParam) {
+                        // arguments = [argType0,argType1,argType2,arg0Wired_dtor]
                         // argType0,argType1,argType2
                         const argsTypeOrigin = Array.prototype.slice.call(arguments, 6, 6 + argCount - 2)
                         // arg0Wired_dtor
-                        const argsWired_dtorOrigin = Array.prototype.slice.call(arguments, 6 + argCount - 2)         
+                        const argsWired_dtorOrigin = Array.prototype.slice.call(arguments, 6 + argCount - 2)
 
                         return function () {
-                            // arg0, arg1, arg2
+                            // arguments = [arg0, arg1, arg2]
                             if (arguments.length !== argCount - 2) {
                                 throwBindingError('function ' + humanName + ' called with ' + arguments.length + ' arguments, expected 0 args!');
                             }
                             var thisWired;
+                            var destructors;
+                            if (needsDestructorStack) {
+                                destructors = [];
+                            }
+
                             if (isClassMethodFunc) {
                                 if (needsDestructorStack) {
-                                    var destructors = [];
                                     thisWired = classParam.toWireType(destructors, this);
                                 } else {
                                     thisWired = classParam.toWireType(null, this);
@@ -6410,8 +6415,13 @@
 
                             // arg0Wired,arg1Wired,arg2Wired
                             var argsWired = [];
-                            for (var i = 0; i < arguments.length; i++) {
-                                argsWired.push(argsTypeOrigin[i].toWireType(null, arguments[i]))
+                            for (var i = 0; i < argCount - 2; ++i) {
+                                if (needsDestructorStack) {
+                                    argsWired.push(argsTypeOrigin[i].toWireType(destructors, arguments[i]))
+                                }
+                                else {
+                                    argsWired.push(argsTypeOrigin[i].toWireType(null, arguments[i]))
+                                }
                             }
 
                             var rv;
@@ -6427,7 +6437,11 @@
                                 if (isClassMethodFunc) {
                                     for (var i = 1; i < argTypes.length; ++i) {
                                         if (argTypes[i].destructorFunction !== null) {
-                                            argsWired_dtorOrigin[i - 1](thisWired);
+                                            if (i == 1) {
+                                                argsWired_dtorOrigin[i - 1](thisWired);
+                                            } else {
+                                                argsWired_dtorOrigin[i - 1](argsWired[i - 1]);
+                                            }
                                         }
                                     }
                                 } else {
@@ -6444,6 +6458,7 @@
                             }
                         }
                     }
+
                     return f1.apply(null, args2)
                 } else {
                     var argsList = "";
@@ -7154,6 +7169,7 @@
                 return a
             }
             function __emval_get_method_caller(argCount, argTypes) {
+
                 var types = __emval_lookupTypes(argCount, argTypes);
                 var retType = types[0];
                 var signatureName = retType.name + "_$" + types.slice(1).map(function (t) {
@@ -7168,6 +7184,7 @@
                     args.push(types[1 + i])
                 }
                 var functionName = makeLegalFunctionName("methodCaller_" + signatureName);
+
                 var functionBody = "return function " + functionName + "(handle, name, destructors, args) {\n";
                 var offset = 0;
                 for (var i = 0; i < argCount - 1; ++i) {
@@ -9659,6 +9676,6 @@
     else if (typeof exports === 'object')
         exports["cv"] = cv;
     if (typeof Module === 'undefined')
-        Module = {};
+       var Module = {};
     return cv(Module);
 }));
